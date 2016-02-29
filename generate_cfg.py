@@ -9,7 +9,7 @@ obj = ast.parse(open(file_name).read())
 class Node:
     '''CFG Node'''
     
-    def __init__(self, ingoing, outgoing, variables=list()):
+    def __init__(self, outgoing, ingoing=None, variables=None):
         self.ingoing = ingoing
         self.outgoing = outgoing
         self.variables = variables
@@ -19,12 +19,12 @@ CFG = list()
 CFG_2 = list()
 
 class Listener(ast.NodeVisitor):
-
     def visit_Assign(self, node):
         v = Vars()
         v.visit(node.value)
         
         CFG.append((node.targets[0].id, v.result))
+       # CFG_2.append(Node(node._fields 
         self.generic_visit(node)
         
 

@@ -6,6 +6,5 @@ while x > 1 > 0:
     z = x-4
     if z > 0:
         x = x / 2
-    else:
-        z = z - 1
+    z = z - 1
 print(x)
