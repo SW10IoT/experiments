@@ -28,8 +28,21 @@ class Listener(ast.NodeVisitor):
 
         vars = Vars()
         vars.visit(node)
-        
-        CFG.append((label.result, vars.result))
+
+        n = Node(label.result,variables=vars.result)
+        CFG.append(n)
+        return n
+        #CFG.append((label.result, vars.result))
+
+
+    def visit_While(self, node):
+        test = self.visit(node.test)
+        body = self.visit(node.body[0])
+        if node.orelse:
+            orelse = self.visit(node.orelse[0])
+
+        test.outgoing.append(body)
+        body.outgoing.append(test)
 
     def visit_Compare(self, node):
         vars = Vars()
@@ -39,23 +52,26 @@ class Listener(ast.NodeVisitor):
 
         label = LabelVisitor()
         label.visit(node)
-        
-        CFG.append((label.result, vars.result))
+
+        #CFG.append((label.result, vars.result))
+        n = Node(label.result, variables = vars.result)
+        CFG.append(n)
+        return n
 
     def visit_Call(self, node):
-        v = Vars()
-        label_visitor = LabelVisitor()
-        
-        v.visit(node)
-        label_visitor.visit(node)
-        CFG.append((label_visitor.result, v.result))
+        vars = Vars()
+        label = LabelVisitor()
 
-    
-    def visit_Num(self, node):
-        return node.n
+        vars.visit(node)
+        label.visit(node)
+
+        n = Node(label.result, variables = vars.result)
+        CFG.append(n)
+        return n
+
 
 class Vars(ast.NodeVisitor):
-    
+
     def visit_Name(self,node):
         self.result.append(node.id)
 
@@ -67,7 +83,7 @@ class Vars(ast.NodeVisitor):
 
     def visit_keyword(self, node):
         self.visit(node.value)
-    
+
     def __init__(self):
         self.result = list()
 
@@ -129,38 +145,38 @@ class LabelVisitor(ast.NodeVisitor):
     def visit_FloorDiv(self, node):
         self.result = ' '.join((self.result, '//'))
 
-        
-    # cmpop = Eq | NotEq | Lt | LtE | Gt | GtE | Is | IsNot | In | NotIn    
+
+    # cmpop = Eq | NotEq | Lt | LtE | Gt | GtE | Is | IsNot | In | NotIn
     def visit_Eq(self, node):
         self.result = ' '.join((self.result, '=='))
-        
+
     def visit_Gt(self, node):
         self.result = ' '.join((self.result,'>'))
-        
+
     def visit_Lt(self, node):
         self.result = ' '.join((self.result,'<'))
-        
+
     def visit_NotEq(self,node):
         self.result = ' '.join((self.result,'!='))
-        
+
     def visit_GtE(self,node):
         self.result = ' '.join((self.result,'>='))
-        
+
     def visit_LtE(self,node):
         self.result = ' '.join((self.result,'<='))
-        
+
     def visit_Is(self,node):
         self.result = ' '.join((self.result,'is'))
 
     def visit_IsNot(self,node):
         self.result = ' '.join((self.result,'is not'))
-                 
+
     def visit_In(self,node):
         self.result = ' '.join((self.result,'in'))
 
     def visit_NotIn(self,node):
         self.result = ' '.join((self.result,'not in'))
-                 
+
     def visit_Num(self, node):
         self.result = ' '.join((self.result, str(node.n)))
     def visit_Name(self,node):
@@ -170,13 +186,8 @@ class LabelVisitor(ast.NodeVisitor):
     def __init__(self):
         self.result = ''
 
-    
+
 Listener().visit(obj)
 
 for n in CFG:
     print(n)
-        
-
-
-
-
