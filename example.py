@@ -1,5 +1,6 @@
-x = input() + 2 + "string"
-while x > 1 > 0:
+x = input()
+x = int(x)
+while x > 1:
     y = x / 2
     if y > 3:
         x = x-y
@@ -7,4 +8,5 @@ while x > 1 > 0:
     if z > 0:
         x = x / 2
     z = z - 1
+
 print(x)
