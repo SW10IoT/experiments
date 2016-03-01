@@ -15,8 +15,6 @@ class Node:
         self.label = label
 
     def __str__(self):
-        if isinstance(self.outgoing[0], str):
-            print(' HEST ' +self.outgoing[0])
         return ' '.join(('Label: ',self.label, ' \toutgoing: \t', str([x.label for x in self.outgoing]), 'ingoing: ', str([x.label for x in self.ingoing]))) #' '.join(self.variables)))
 
 CFG = list()
