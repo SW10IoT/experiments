@@ -8,21 +8,24 @@ obj = ast.parse(open(file_name).read())
 
 class Node:
     '''CFG Node'''
-    
-    def __init__(self, outgoing, ingoing=None, variables=None):
+    def __init__(self, label,*,outgoing=list(), ingoing=list(), variables=list()):
         self.ingoing = ingoing
         self.outgoing = outgoing
         self.variables = variables
+        self.label = label
 
+    def __str__(self):
+        if isinstance(self.outgoing[0], str):
+            print(' HEST ' +self.outgoing[0])
+        return ' '.join(('Label: ',self.label, ' \toutgoing: \t', str([x.label for x in self.outgoing]), 'ingoing: ', str([x.label for x in self.ingoing]))) #' '.join(self.variables)))
 
 CFG = list()
-
 
 class Listener(ast.NodeVisitor):
     def visit_Assign(self, node):
         label = LabelVisitor()
         label.visit(node)
-        
+
         vars = Vars()
         vars.visit(node)
         
