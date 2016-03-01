@@ -1,4 +1,4 @@
-x = int(input()) + 1 + 2 + 3
+x = input() + 2 + "string"
 while x > 1 > 0:
     y = x / 2
     if y > 3:
