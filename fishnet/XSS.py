@@ -7,10 +7,12 @@ app = Flask(__name__)
 def home():
     return "Hello, World!"  # return a string
 
+html = open('templates/example1.html').read()
+
 @app.route('/example1', methods =['GET'])
 def example1():
     param = request.args.get('param', 'not set')
-    resp = make_response(render_template('example1.html', param = param))
+    resp = make_response(html.replace('{{ param }}', param))
     resp.set_cookie('session_id',''.join(random.choice(string.ascii_uppercase) for x in range(16)))
     return resp
 
@@ -25,4 +27,4 @@ def example2_action():
     return resp
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port= 4000,debug= True)
+    app.run(debug= True)
