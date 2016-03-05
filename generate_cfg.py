@@ -11,7 +11,7 @@ obj = parse(open(file_name).read())
 
 class Node(object):
     '''A Control Flow Graph node that contains a list of ingoing and outgoing nodes and a list of its variables.'''
-    def __init__(self, label, ingoing=None, outgoing=None, variables=None):
+    def __init__(self, label, *, ingoing=None, outgoing=None, variables=None):
         if ingoing is None:
             self.ingoing = list()
         else:
