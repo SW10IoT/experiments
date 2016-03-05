@@ -96,14 +96,18 @@ class Listener(NodeVisitor):
         return n
 
 
-    def visit_While(self, node):
-
+    def visit_While(self, node): 
         test = self.visit(node.test)
-        body_first = self.visit(node.body[0])
-        body_last = self.visit(node.body[-1])
+        body_stmts = self.stmt_star_handler(node.body)
         if node.orelse:
             orelse = self.visit(node.orelse[0])
 
+        body_first = body_stmts[0]
+        test.outgoing.append(body_first)
+        
+        body_last = body_stmts[-1]
+        body_last.outgoing.append(test)
+            
         print_CFG(CFG)
 
         return test
@@ -128,7 +132,7 @@ class Listener(NodeVisitor):
 
     def visit_Expr(self, node):
         return self.visit(node.value)
-        
+    
     def visit_Call(self, node):
 
         vars = VarsVisitor()
