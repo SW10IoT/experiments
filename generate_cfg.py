@@ -62,18 +62,24 @@ class Listener(NodeVisitor):
             print(node.__class__.__name__)
             self.generic_visit(node)
 
-    def visit_Module(self, node):
+    def stmt_star_handler(self, stmts):
         cfg_statements = list()
         
-        for stmt in node.body:
+        for stmt in stmts:
             n = self.visit(stmt)
             cfg_statements.append(n)
 
         for n, next_node in zip(cfg_statements, cfg_statements[1:]):
             n.outgoing.append(next_node)
 
+        return cfg_statements
+            
+    def visit_Module(self, node):        
+        self.stmt_star_handler(node.body)
+
         print_CFG(CFG)
-        
+
+            
     def visit_Assign(self, node):
 
         label = LabelVisitor()
@@ -93,7 +99,7 @@ class Listener(NodeVisitor):
     def visit_While(self, node):
 
         test = self.visit(node.test)
-        #body_first = self.visit(node.body[0])
+        body_first = self.visit(node.body[0])
         body_last = self.visit(node.body[-1])
         if node.orelse:
             orelse = self.visit(node.orelse[0])
