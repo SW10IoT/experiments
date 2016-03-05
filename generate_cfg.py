@@ -70,7 +70,13 @@ class Listener(NodeVisitor):
             cfg_statements.append(n)
 
         for n, next_node in zip(cfg_statements, cfg_statements[1:]):
-            n.outgoing.append(next_node)
+            if isinstance(n,tuple):
+                n[0].outgoing.append(next_node)
+                n[1].outgoing.append(next_node)
+            elif isinstance(next_node,tuple):
+                n.outgoing.append(next_node[0])
+            else:
+                n.outgoing.append(next_node)
 
         return cfg_statements
             
@@ -79,6 +85,18 @@ class Listener(NodeVisitor):
 
         print_CFG(CFG)
 
+    def visit_If(self, node):
+        test = self.visit(node.test)
+        body_stmts = self.stmt_star_handler(node.body)
+        if node.orelse:
+            orelse = self.visit(node.orelse)
+
+        body_first = body_stmts[0]
+        body_last = body_stmts[-1]
+            
+        test.outgoing.append(body_first)
+
+        return (test,body_last)
             
     def visit_Assign(self, node):
 
@@ -100,7 +118,7 @@ class Listener(NodeVisitor):
         test = self.visit(node.test)
         body_stmts = self.stmt_star_handler(node.body)
         if node.orelse:
-            orelse = self.visit(node.orelse[0])
+            orelse = self.visit(node.orelse)
 
         body_first = body_stmts[0]
         test.outgoing.append(body_first)
