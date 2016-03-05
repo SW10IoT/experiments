@@ -18,7 +18,11 @@ class Node:
         self.label = label
 
     def __str__(self):
-        return ' '.join(('Label: ',self.label, ' \toutgoing: \t', str([x.label for x in self.outgoing]), 'ingoing: ', str([x.label for x in self.ingoing]))) #' '.join(self.variables)))
+        label = ' '.join(('Label: ',self.label))
+        outgoing = ' '.join((' \toutgoing: ', str([x.label for x in self.outgoing])))
+        ingoing = ' '.join(('ingoing: ', str([x.label for x in self.ingoing])))
+        variables = ' '.join(('variables: ', ' '.join(self.variables)))
+        return ' '.join((label, outgoing, ingoing, variables))
 
 CFG = list()
 
