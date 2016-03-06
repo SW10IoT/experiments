@@ -91,10 +91,17 @@ class LabelVisitor(NodeVisitor):
         self.result = ' '.join((self.result,'not in'))
 
     def visit_Num(self, node):
-        self.result = ' '.join((self.result, str(node.n)))
+        self.result = self.join((self.result, str(node.n)))
+
     def visit_Name(self,node):
-        self.result = ' '.join((self.result, node.id))
+        self.result = self.join((self.result, node.id))
+
     def visit_Str(self,node):
         self.result = ' '.join((self.result,node.s))
+
+    def join(self, strings):
+        return ' '.join(filter(None,strings)) # filters out empty strings, providing a cleaner output
+
+
     def __init__(self):
         self.result = ''
