@@ -24,3 +24,11 @@ class LabelVisitorTest(LabelVisitorTestCase):
     def test_call(self):
         vars = self.perform_vars_on_expression('print(x)')
         self.assertEqual(vars.result,['x'])
+
+    def test_keyword_vararg(self):
+        vars = self.perform_vars_on_expression('print(arg = x)')
+        self.assertEqual(vars.result,['x'])
+
+    def test_keyword_numarg(self):
+        vars = self.perform_vars_on_expression('print(arg = 1)')
+        self.assertEqual(vars.result,[])
