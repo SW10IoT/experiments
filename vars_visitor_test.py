@@ -20,3 +20,7 @@ class LabelVisitorTest(LabelVisitorTestCase):
     def test_assign_var_and_var(self):
         vars = self.perform_vars_on_expression('a = x')
         self.assertEqual(vars.result,['a','x'])
+
+    def test_call(self):
+        vars = self.perform_vars_on_expression('print(x)')
+        self.assertEqual(vars.result,['x'])
